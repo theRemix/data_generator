@@ -35,21 +35,24 @@ from random import choice, randint, random
 import datetime
 from datetime import datetime as dt
 from collections import defaultdict
+import argparse
 
 import sys
 
-try:
-    input_file = sys.argv[1]
-    num_of_lines = int(sys.argv[2])
-    file_type = sys.argv[3]
-    out_file = sys.argv[4]
+parser = argparse.ArgumentParser(
+    description='This script generates various files with random/semi-random data for use in classes and demonstrations.',
+    epilog='Generate random formatted data.',
+    formatter_class=argparse.RawTextHelpFormatter,
+    prog='data_generator')
 
-except IndexError:
-    sys.exit('''
-    data_generator produces data in multiple formats, including sql tables
-    and csvs.
-    Usage: data_generator.py <input_file> <num_of_lines> <file_type> <out_file>
-    ''')
+parser.add_argument('-f', '--filetype', default='csv', choices=['csv', 'sql', 'json', 'xml', 'pickle'], help='''Identify an output filetype format for the results. The default is csv''')
+parser.add_argument('-n', '--numlines', default=10, help='''Set the number of lines to output. The default is 10''')
+
+parser.add_argument('input_file', help='''The input file to draw names from''')
+parser.add_argument('out_file', help='''The output filename to assign to the file that stores the results''')
+
+args = parser.parse_args()
+
 
 def create_email(fname, lname, domain):
     '''Creates an email address in the format first initial last name @ domain
@@ -59,7 +62,7 @@ def create_email(fname, lname, domain):
     addr = '{}{}@{}'.format(fname[0], lname, domain)
     return addr
 
-fin = open(input_file)
+fin = open(args.input_file)
 domain = fin.readline().strip()
 
 names = defaultdict(str)
@@ -164,15 +167,15 @@ def create_outputs(num_of_lines, new_line=True):
         output = ''
     return outputs
 
-if file_type == 'csv':
-    with open(out_file, 'w') as fout:
-        outputs = create_outputs(num_of_lines)
+if args.filetype == 'csv':
+    with open(args.out_file, 'w') as fout:
+        outputs = create_outputs(args.numlines)
         print('Output length (csv):', len(outputs))
         for line in outputs:
             fout.write(line)
     fout.close()
 
-elif file_type == 'sql':
+elif args.filetype == 'sql':
     import sqlite3 as sql
     conn = sql.connect(out_file)
     cur = conn.cursor()
@@ -187,7 +190,7 @@ elif file_type == 'sql':
     except:
         pass
 
-    outputs = create_outputs(num_of_lines, new_line=False)
+    outputs = create_outputs(args.numlines, new_line=False)
     print('Output length (sql):', len(outputs))
     for line in outputs:
         name, email, fmip, toip, datetime, lat, long = line.split(',')
