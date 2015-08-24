@@ -177,7 +177,7 @@ if args.filetype == 'csv':
 
 elif args.filetype == 'sql':
     import sqlite3 as sql
-    conn = sql.connect(out_file)
+    conn = sql.connect(args.out_file)
     cur = conn.cursor()
     try:
         cur.execute('''CREATE TABLE superheroes (name text,
