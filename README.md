@@ -1,10 +1,33 @@
+# Data Generator
+
 data_generator.py (dg) is intended to enable teachers, hobbyists, students, etc to create defined data sets for use in classrooms, self study and as data for puzzles. This allows an instructor to create a well defined data set with known characteristics.
 
 The general premise is that dg produces tabular data based on certain seeds. The tabular data can be output into file formats such as csv, sql, etc. The current seeds are simply a list of superhero names and domains from the DC Comics pantheon.
 
+**Usage**
+
+minimum arguments required, uses defaults [type=csv] [number of lines=10]
+will read input file `names.txt` and write csv to `out.csv`
+```
+python data_generator.py names.txt out.csv
+```
+
+generate 100 rows and save it to sqlite
+```
+python data_generator.py -f sql -n 100 names.txt generated.sqlite3
+```
+
+read the help file for available options
+```
+python data_generator.py -h
+```
+
+
 Required input file format: --------------------------------------------------
 Line 1: a representative domain name (such as jleague.org)
 Lines 2 to the end: sample user names (such as bruce wayne)
+
+[example input file](names.txt)
 
 The data generator currently creates columns with the following data: --------
 * names
