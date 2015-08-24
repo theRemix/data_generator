@@ -53,6 +53,12 @@ parser.add_argument('out_file', help='''The output filename to assign to the fil
 
 args = parser.parse_args()
 
+try:
+    args.numlines = int(args.numlines)
+except AttributeError:
+    sys.exit('''
+    -n --numlines requires a valid integer
+    ''')
 
 def create_email(fname, lname, domain):
     '''Creates an email address in the format first initial last name @ domain
